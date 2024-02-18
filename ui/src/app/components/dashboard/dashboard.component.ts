@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionEnum, ResponseDto, TypeEnum } from '../../types/atoss.types';
 import { AtossService } from '../../services/atoss/atoss.service';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, combineLatest, combineLatestWith, map, of, timer } from 'rxjs';
 import { StorageService } from '../../services/storage/storage.service';
 import { Router } from '@angular/router';
-import { Credentials } from '../../types/storage.types';
+import { Credentials, HistoryBooking } from '../../types/storage.types';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CalculatedHistoryItem, CalculatedTypeEnum } from '../../types/history.types';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,12 +15,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class DashboardComponent implements OnInit {
 
-  type: TypeEnum = TypeEnum.homeoffice;
+  type: TypeEnum = this.isTrip() ? TypeEnum.trip : TypeEnum.homeoffice;
 
   balance$!: Observable<ResponseDto>;
 
+  history!: CalculatedHistoryItem[];
+  sum$!: Observable<number>;
+
   ActionEnum = ActionEnum;
   TypeEnum = TypeEnum;
+  CalculatedTypeEnum = CalculatedTypeEnum;
 
   constructor(
     private snackbar: MatSnackBar,
@@ -33,6 +38,7 @@ export class DashboardComponent implements OnInit {
       this.logout();
 
     this.getBalance();
+    this.calculateHistory();
   }
 
   logout() {
@@ -70,6 +76,7 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (booking) => {
           this.storageService.addBooking(booking);
+          this.calculateHistory();
 
           this.snackbar.open(
             'Erfolgreich gebucht!',
@@ -93,12 +100,88 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  clear() {
+    localStorage.setItem('history', '[]');
+    this.calculateHistory();
+  }
+
   calculateHistory() {
-    return this.storageService.getBookingHistory().reverse();
+    let calculated_history: CalculatedHistoryItem[] = [];
+    let history: HistoryBooking[] = this.storageService.getBookingHistory();
+
+    for (let i = 0; i < history.length; i++) {
+      calculated_history.push({
+        type: CalculatedTypeEnum.booking,
+        ongoing: false,
+        booking: history[i],
+      });
+
+      if (history[i].booking.action == ActionEnum.start) {
+        if (history.length > i + 1 && history[i + 1].booking.action == ActionEnum.stop) {
+          calculated_history.push({
+            type: CalculatedTypeEnum.calculation,
+            ongoing: false,
+            amount$: of(
+              (new Date(history[i + 1].timestamp).getTime() - new Date(history[i].timestamp).getTime()) / 3600000
+            ),
+          });
+        }
+        else if (history.length == i + 1) {
+          calculated_history.push({
+            type: CalculatedTypeEnum.calculation,
+            ongoing: true,
+            amount$: timer(0, 250).pipe(
+              map(
+                () => {
+                  return (new Date().getTime() - new Date(history[i].timestamp).getTime()) / 3600000 as number;
+                }
+              ),
+            ),
+          });
+        }
+      }
+    }
+
+    this.history = calculated_history.reverse();
+    this.sum$ = of(0).pipe(
+      combineLatestWith(
+        calculated_history.filter(
+          (ch) => {
+            return !!ch.amount$;
+          }
+        ).map(
+          (ch) => {
+            return ch.amount$;
+          }
+        )
+      ),
+      map(
+        (amounts: any[]) => {
+          return amounts.reduce(
+            (partial, a) => {
+              return partial + a;
+            }
+          );
+        }
+      )
+    );
   }
 
   isActive(): boolean {
-    return this.storageService.getBookingHistory().reverse()[0].booking.action == ActionEnum.start;
+    try {
+      return this.storageService.getBookingHistory().reverse()[0].booking.action == ActionEnum.start;
+    } catch {
+      return false;
+    }
+  }
+
+  isTrip(): boolean {
+    try {
+      return this.storageService.getBookingHistory().reverse()[0].booking.action == ActionEnum.start
+        && this.storageService.getBookingHistory().reverse()[0].booking.type == TypeEnum.trip;
+    } catch {
+      return false;
+    }
   }
 
 }

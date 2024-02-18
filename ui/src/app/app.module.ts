@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { FleIconModule, FleButtonModule, FleNavigationModule, flenderIconSet, FleCategoryModule, FleIconButtonModule } from '@flender/ngx-ui-components';
-import { heroArrowLeftOnRectangle, heroArrowRightOnRectangle, heroArrowPath, heroCog8Tooth, heroLockClosed, heroShieldExclamation } from "@ng-icons/heroicons/outline";
+import { heroArrowLeftOnRectangle, heroArrowRightOnRectangle, heroArrowPath, heroCog8Tooth, heroLockClosed, heroShieldExclamation, heroClock, heroCheckBadge, heroInformationCircle } from "@ng-icons/heroicons/outline";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,12 +21,14 @@ import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { HttpClientModule } from '@angular/common/http';
+import { TimeAmountPipe } from './pipes/time-amount.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
+    TimeAmountPipe,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +56,9 @@ import { HttpClientModule } from '@angular/common/http';
       heroCog8Tooth,
       heroLockClosed,
       heroShieldExclamation,
+      heroClock,
+      heroCheckBadge,
+      heroInformationCircle,
     }, [
       ...flenderIconSet
     ]),

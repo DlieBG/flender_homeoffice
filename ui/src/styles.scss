@@ -50,10 +50,14 @@ h6 {
 
 .actions>fle-icon-button>button {
     padding-top: 0;
-    color: #c6c9cc;
+    color: grey;
 }
 
 .button>button.fle-flex {
     justify-content: center;
     width: 100%;
+}
+
+mat-snack-bar-container {
+    margin-bottom: 2em !important;
 }

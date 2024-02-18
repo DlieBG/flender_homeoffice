@@ -6,6 +6,6 @@ export interface Credentials {
 }
 
 export interface HistoryBooking {
-    timestamp: Date;
+    timestamp: string | Date;
     booking: ResponseDto;
 }

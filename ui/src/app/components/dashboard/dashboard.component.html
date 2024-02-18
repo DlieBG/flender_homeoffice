@@ -59,9 +59,103 @@
         <br>
     </div>
 
-    <div class="history" hidden>
+    <div class="balance-today">
+        <fle-category label="Saldo" mode="secondary" />
+
+        <div class="table">
+            <table>
+                <tr>
+                    <td>
+                        Bruttozeit:
+                    </td>
+                    <td class="time">
+                        <h3>
+                            {{ sum$ | async | timeAmount }}
+                        </h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="ongoing-table">
+                            <fle-icon class="ongoing" name="heroClock" size="xl" *ngIf="isActive()"></fle-icon>
+                        </div>
+                    </td>
+                    <td class="minus">
+                        -15 Minuten Pause
+                        <br>
+                        -30 Minuten Pause
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Nettozeit:
+                    </td>
+                    <td class="time">
+                        <h2>
+                            {{(( sum$ | async) ?? 0) - .75 | timeAmount }}
+                        </h2>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="history">
         <fle-category label="Verlauf" mode="secondary" />
 
-        <pre>{{calculateHistory()|json}}</pre>
+        <div class="history-list">
+            <div class="history-item" *ngIf="history.length == 0;">
+                <fle-icon class="info" name="heroInformationCircle" size="xl"></fle-icon>
+
+                <div>
+                    <p>
+                        Keine Buchungen vorhanden.
+                    </p>
+
+                    <p>
+                        Der Verlauf wird nur in diesem Browser gespeichert.
+                    </p>
+
+                    <p>
+                        Nicht Geräteübergreifend!
+                    </p>
+                </div>
+            </div>
+
+            <ng-container *ngFor="let item of history;">
+                <div class="history-item" *ngIf="item.type == CalculatedTypeEnum.booking">
+                    <fle-icon class="start" name="heroArrowLeftOnRectangle" size="xl"
+                        *ngIf="item.booking?.booking?.action == ActionEnum.start"></fle-icon>
+
+                    <fle-icon class="stop" name="heroArrowRightOnRectangle" size="xl"
+                        *ngIf="item.booking?.booking?.action == ActionEnum.stop"></fle-icon>
+
+                    <div>
+                        <h3>
+                            {{ item.booking?.booking?.booked_time }}
+                        </h3>
+
+                        <p *ngIf="item.booking?.booking?.type == TypeEnum.homeoffice">
+                            Homeoffice
+                        </p>
+                        <p *ngIf="item.booking?.booking?.type == TypeEnum.trip">
+                            Dienstreise
+                        </p>
+                    </div>
+                </div>
+
+                <div class="spacer" *ngIf="item.booking?.booking?.action == ActionEnum.start"></div>
+
+                <div class="history-item calculation" *ngIf="item.type == CalculatedTypeEnum.calculation">
+                    <fle-icon class="ongoing" name="heroClock" size="xl" *ngIf="item.ongoing"></fle-icon>
+
+                    <fle-icon class="finished" name="heroCheckBadge" size="xl" *ngIf="!item.ongoing"></fle-icon>
+
+                    <h3 *ngIf="item.amount$ | async as amount">
+                        {{ amount | timeAmount }}
+                    </h3>
+                </div>
+            </ng-container>
+        </div>
     </div>
 </div>
