@@ -14,6 +14,8 @@ export class LoginComponent implements OnInit {
 
   credentials!: Credentials;
 
+  loading: boolean = false;
+
   constructor(
     private snackbar: MatSnackBar,
     private router: Router,
@@ -26,6 +28,8 @@ export class LoginComponent implements OnInit {
   }
 
   save() {
+    this.loading = true;
+
     this.atossService
       .getBalance({
         personal_number: this.credentials.personal_number,
@@ -44,6 +48,8 @@ export class LoginComponent implements OnInit {
           );
 
           this.router.navigate(['/']);
+
+          this.loading = false;
         },
         error: () => {
           this.snackbar.open(
@@ -53,6 +59,8 @@ export class LoginComponent implements OnInit {
               duration: 4000,
             }
           );
+
+          this.loading = false;
         }
       });
   }

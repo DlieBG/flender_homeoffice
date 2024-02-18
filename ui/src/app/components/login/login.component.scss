@@ -40,3 +40,14 @@ a {
 mat-form-field {
     width: 100%;
 }
+
+.login-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-buttons,
+.login-loader {
+    height: 48;
+}
