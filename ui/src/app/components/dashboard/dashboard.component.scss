@@ -1,0 +1,156 @@
+.moin,
+.flexi,
+.booking,
+.balance-today,
+.history {
+    margin-bottom: 2em;
+}
+
+.balance,
+.balance-loader {
+    height: 200px;
+}
+
+.moin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h3>span {
+    text-decoration: underline;
+    text-decoration-color: #f9b200;
+    text-decoration-thickness: 3px;
+}
+
+.actions {
+    display: flex;
+    margin-top: 1em;
+}
+
+.wrapper {
+    margin-top: .5em;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.balance-loader,
+.booking-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.booking-buttons,
+.booking-loader {
+    height: 144px;
+}
+
+.select {
+    margin-top: 1.5em;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.table {
+    margin-top: 1em;
+    color: lightgrey;
+}
+
+table {
+    vertical-align: middle;
+}
+
+.minus {
+    text-decoration: underline;
+    text-decoration-color: rgba(220, 20, 60, 0.69);
+    text-decoration-thickness: 1px;
+}
+
+.ongoing-table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.time {
+    padding-left: .5em;
+}
+
+.time>h2 {
+    margin: .25em 0 .25em 0;
+    color: #fff;
+}
+
+.history-list {
+    margin-top: 1.5em;
+}
+
+.history-item {
+    margin-top: 1.25em;
+    display: flex;
+    align-items: center;
+}
+
+.history-item>fle-icon {
+    margin-right: 1em;
+}
+
+.info {
+    color: #227dc6;
+}
+
+.start {
+    color: forestgreen;
+}
+
+.stop {
+    color: crimson;
+}
+
+.ongoing {
+    color: orangered;
+    animation: pulse-animation 2s infinite;
+}
+
+.finished {
+    color: cornflowerblue;
+}
+
+@keyframes pulse-animation {
+    0% {
+        color: orangered;
+    }
+
+    70% {
+        color: lightgrey;
+    }
+
+    100% {
+        color: orangered;
+    }
+}
+
+.spacer {
+    height: 25px;
+}
+
+.calculation {
+    margin-left: 2em;
+    height: 27px;
+}
+
+h3 {
+    height: 27px;
+}
+
+h2 {
+    height: 36px;
+}
+
+.history-item p {
+    color: grey;
+}

@@ -1,0 +1,63 @@
+@font-face {
+    font-family: "FlenderType";
+    src: url("assets/fonts/DINPro-Light.eot");
+    src: url("assets/fonts/DINPro-Light.eot?#iefix") format("embedded-opentype"),
+        url("assets/fonts/DINPro-Light.otf") format("opentype"),
+        url("assets/fonts/DINPro-Light.svg") format("svg"),
+        url("assets/fonts/DINPro-Light.ttf") format("truetype"),
+        url("assets/fonts/DINPro-Light.woff") format("woff"),
+        url("assets/fonts/DINPro-Light.woff2") format("woff2");
+    font-weight: lighter;
+    font-style: normal;
+}
+
+html,
+body {
+    height: 100%;
+    background-color: #000;
+    color: #fff;
+}
+
+body {
+    margin: 0;
+    font-family: "FlenderType", "Roboto Mono", sans-serif;
+}
+
+.fle-bg-darker {
+    background-color: #000;
+}
+
+.fle-max-w-\[1230px\] {
+    max-width: 420px;
+}
+
+.base\:fle-hidden {
+    display: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: revert;
+}
+
+* {
+    border-style: none;
+}
+
+.actions>fle-icon-button>button {
+    padding-top: 0;
+    color: grey;
+}
+
+.button>button.fle-flex {
+    justify-content: center;
+    width: 100%;
+}
+
+mat-snack-bar-container {
+    margin-bottom: 2em !important;
+}

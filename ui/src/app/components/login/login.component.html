@@ -1,0 +1,58 @@
+<div class="body">
+    <div class="welcome">
+        <fle-category label="Willkommen!" mode="primary" />
+
+        <h2>
+            <span>Was</span>
+            ist das?
+        </h2>
+
+        <p>
+            Ein alternativer Client für die Homeoffice Buchungen bei Flender.
+        </p>
+
+        <ol>
+            <li>schneller</li>
+            <li>einfacher</li>
+            <li>zeitgemäß</li>
+        </ol>
+    </div>
+
+    <div class="credentials">
+        <fle-category label="Credentials" mode="primary" />
+
+        <div class="info">
+            <fle-icon name="heroShieldExclamation" size="xl"></fle-icon>
+
+            <div>
+                <p>
+                    Die Credentials werden nur im Browser im LocalStorage abgelegt.
+                </p>
+                <p>
+                    Es erfolgt keine weitere Speicherung oder Verarbeitung!
+                </p>
+                <p>
+                    Source Code:
+                    <a href="https://github.com/DlieBG/flender_homeoffice/" target="_blank">GitHub</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="input">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Personalnummer</mat-label>
+                <input matInput [(ngModel)]="credentials.personal_number">
+                <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>PIN</mat-label>
+                <input matInput type="password" [(ngModel)]="credentials.pin">
+                <mat-icon matSuffix>123</mat-icon>
+            </mat-form-field>
+
+            <fle-button class="button" mode="primary" appearance="flat" label="Speichern" leftIconName="heroLockClosed"
+                type="button" (handleClick)="save()"></fle-button>
+        </div>
+    </div>
+</div>

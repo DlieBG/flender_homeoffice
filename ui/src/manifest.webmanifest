@@ -1,0 +1,16 @@
+{
+  "name": "Flender Homeoffice",
+  "short_name": "Homeoffice",
+  "theme_color": "#000",
+  "background_color": "#227dc6",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "assets/flender.png",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}

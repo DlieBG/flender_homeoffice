@@ -1,2 +1,2 @@
 # flender_homeoffice
-Alternative client for booking home office times at Flender - simpler, faster, more user-friendly
+Alternative client for booking homeoffice times at Flender - simpler, faster, more user-friendly

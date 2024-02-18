@@ -1,0 +1,167 @@
+<div class="body">
+    <div class="balance" *ngIf="balance$ | async as balance; else loader;">
+        <div class="moin">
+            <h3>
+                Moin
+                <span>{{ balance.name.split(', ')[1] }}</span>!
+            </h3>
+
+            <div class="actions">
+                <fle-icon-button mode="secondary" appearance="basic" iconName="heroArrowPath" type="button"
+                    (handleClick)="getBalance()"></fle-icon-button>
+
+                <fle-icon-button mode="secondary" appearance="basic" iconName="heroCog8Tooth" type="button"
+                    routerLink="/login"></fle-icon-button>
+            </div>
+        </div>
+
+        <div class="flexi">
+            <fle-category label="Flexi" mode="primary" />
+
+            <div class="wrapper">
+                <h3>
+                    {{ balance.flexi_date }}
+                </h3>
+                <h1>
+                    {{ balance.flexi_balance }}
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #loader>
+        <div class="balance-loader">
+            <mat-spinner color="accent" diameter="50"></mat-spinner>
+        </div>
+    </ng-template>
+
+    <div class="booking">
+        <fle-category label="Buchung" mode="primary" />
+
+        <div class="select">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Typ</mat-label>
+                <mat-select [(ngModel)]="type">
+                    <mat-option [value]="TypeEnum.homeoffice" selected>Homeoffice</mat-option>
+                    <mat-option [value]="TypeEnum.trip" selected>Dienstreise</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="booking-buttons" [hidden]="loading">
+            <fle-button class="button" mode="primary" [appearance]="isActive() ? 'stroked' : 'flat'" label="Kommen"
+                leftIconName="heroArrowLeftOnRectangle" type="button"
+                (handleClick)="postBooking(ActionEnum.start)"></fle-button>
+            <br>
+
+            <fle-button class="button" mode="primary" [appearance]="isActive() ? 'flat' : 'stroked'" label="Gehen"
+                leftIconName="heroArrowRightOnRectangle" type="button"
+                (handleClick)="postBooking(ActionEnum.stop)"></fle-button>
+            <br>
+        </div>
+
+        <div class="booking-loader" *ngIf="loading">
+            <mat-spinner color="accent" diameter="50"></mat-spinner>
+        </div>
+    </div>
+
+    <div class="balance-today">
+        <fle-category label="Saldo" mode="secondary" />
+
+        <div class="table">
+            <table>
+                <tr>
+                    <td>
+                        Bruttozeit:
+                    </td>
+                    <td class="time">
+                        <h3>
+                            {{ sum$ | async | timeAmount }}
+                        </h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="ongoing-table">
+                            <fle-icon class="ongoing" name="heroClock" size="xl" *ngIf="isActive()"></fle-icon>
+                        </div>
+                    </td>
+                    <td class="minus">
+                        -15 Minuten Pause
+                        <br>
+                        -30 Minuten Pause
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Nettozeit:
+                    </td>
+                    <td class="time">
+                        <h2>
+                            {{(( sum$ | async) ?? 0) - .75 | timeAmount }}
+                        </h2>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="history">
+        <fle-category label="Verlauf" mode="secondary" />
+
+        <div class="history-list">
+            <div class="history-item" *ngIf="history.length == 0;">
+                <fle-icon class="info" name="heroInformationCircle" size="xl"></fle-icon>
+
+                <div>
+                    <p>
+                        Keine Buchungen vorhanden.
+                    </p>
+
+                    <p>
+                        Der Verlauf wird nur in diesem Browser gespeichert.
+                    </p>
+
+                    <p>
+                        Nicht Geräteübergreifend!
+                    </p>
+                </div>
+            </div>
+
+            <ng-container *ngFor="let item of history;">
+                <div class="history-item" *ngIf="item.type == CalculatedTypeEnum.booking">
+                    <fle-icon class="start" name="heroArrowLeftOnRectangle" size="xl"
+                        *ngIf="item.booking?.booking?.action == ActionEnum.start"></fle-icon>
+
+                    <fle-icon class="stop" name="heroArrowRightOnRectangle" size="xl"
+                        *ngIf="item.booking?.booking?.action == ActionEnum.stop"></fle-icon>
+
+                    <div>
+                        <h3>
+                            {{ item.booking?.booking?.booked_time }}
+                        </h3>
+
+                        <p *ngIf="item.booking?.booking?.type == TypeEnum.homeoffice">
+                            Homeoffice
+                        </p>
+                        <p *ngIf="item.booking?.booking?.type == TypeEnum.trip">
+                            Dienstreise
+                        </p>
+                    </div>
+                </div>
+
+                <div class="spacer" *ngIf="item.booking?.booking?.action == ActionEnum.start"></div>
+
+                <div class="history-item calculation" *ngIf="item.type == CalculatedTypeEnum.calculation">
+                    <fle-icon class="ongoing" name="heroClock" size="xl" *ngIf="item.ongoing"></fle-icon>
+
+                    <fle-icon class="finished" name="heroCheckBadge" size="xl" *ngIf="!item.ongoing"></fle-icon>
+
+                    <h3 *ngIf="item.amount$ | async as amount">
+                        {{ amount | timeAmount }}
+                    </h3>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+h2 {
+    margin-top: .75em;
+    margin-bottom: .5em;
+}
+
+ol {
+    list-style: decimal-leading-zero;
+    margin-top: .75em;
+    margin-left: 3em;
+}
+
+li::marker {
+    color: #f9b200;
+}
+
+.credentials {
+    margin-top: 2em;
+}
+
+.info {
+    margin-top: 1.5em;
+    display: flex;
+    align-items: center;
+}
+
+.info>fle-icon {
+    margin-right: 1em;
+    color: crimson;
+}
+
+a {
+    text-decoration: underline;
+}
+
+.input {
+    margin-top: 1.5em;
+    margin-bottom: 10em;
+}
+
+mat-form-field {
+    width: 100%;
+}
