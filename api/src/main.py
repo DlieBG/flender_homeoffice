@@ -1,6 +1,7 @@
 from models import ResponseDto, BalanceRequestDto, BookingRequestDto
 from atoss import get_balance, post_booking
 from fastapi import FastAPI
+from time import sleep
 
 
 app = FastAPI()
@@ -15,6 +16,7 @@ def balance(body: BalanceRequestDto) -> ResponseDto:
 @app.post('/api/booking')
 def booking(body: BookingRequestDto) -> ResponseDto:
     print(body)
+    sleep(2)
     return ResponseDto(
         personal_number="1234",
         name="Schwering, Bene",

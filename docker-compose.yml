@@ -1,0 +1,11 @@
+version: '3'
+services:
+  ui:
+    image: ghcr.io/dliebg/flender_homeoffice/ui:latest
+    restart: unless-stopped
+    ports:
+      - 9981:80
+
+  api:
+    image: ghcr.io/dliebg/flender_homeoffice/api:latest
+    restart: unless-stopped
