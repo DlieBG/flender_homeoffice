@@ -1,0 +1,67 @@
+<div class="body">
+    <div class="balance" *ngIf="balance$ | async as balance; else loader;">
+        <div class="moin">
+            <h3>
+                Moin
+                <span>{{ balance.name.split(', ')[1] }}</span>!
+            </h3>
+
+            <div class="actions">
+                <fle-icon-button mode="secondary" appearance="basic" iconName="heroArrowPath" type="button"
+                    (handleClick)="getBalance()"></fle-icon-button>
+
+                <fle-icon-button mode="secondary" appearance="basic" iconName="heroCog8Tooth" type="button"
+                    routerLink="/login"></fle-icon-button>
+            </div>
+        </div>
+
+        <div class="flexi">
+            <fle-category label="Flexi" mode="primary" />
+
+            <div class="wrapper">
+                <h3>
+                    {{ balance.flexi_date }}
+                </h3>
+                <h1>
+                    {{ balance.flexi_balance }}
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #loader>
+        <div class="loader">
+            <mat-spinner color="accent" diameter="50"></mat-spinner>
+        </div>
+    </ng-template>
+
+    <div class="booking">
+        <fle-category label="Buchung" mode="primary" />
+
+        <div class="select">
+            <mat-form-field appearance="outline" color="accent">
+                <mat-label>Typ</mat-label>
+                <mat-select [(ngModel)]="type">
+                    <mat-option [value]="TypeEnum.homeoffice" selected>Homeoffice</mat-option>
+                    <mat-option [value]="TypeEnum.trip" selected>Dienstreise</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <fle-button class="button" mode="primary" [appearance]="isActive() ? 'stroked' : 'flat'" label="Kommen"
+            leftIconName="heroArrowLeftOnRectangle" type="button"
+            (handleClick)="postBooking(ActionEnum.start)"></fle-button>
+        <br>
+
+        <fle-button class="button" mode="primary" [appearance]="isActive() ? 'flat' : 'stroked'" label="Gehen"
+            leftIconName="heroArrowRightOnRectangle" type="button"
+            (handleClick)="postBooking(ActionEnum.stop)"></fle-button>
+        <br>
+    </div>
+
+    <div class="history" hidden>
+        <fle-category label="Verlauf" mode="secondary" />
+
+        <pre>{{calculateHistory()|json}}</pre>
+    </div>
+</div>
