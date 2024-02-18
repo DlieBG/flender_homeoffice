@@ -7,7 +7,7 @@
 }
 
 .balance,
-.loader {
+.balance-loader {
     height: 200px;
 }
 
@@ -35,10 +35,16 @@ h3>span {
     align-items: center;
 }
 
-.loader {
+.balance-loader,
+.booking-loader {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.booking-buttons,
+.booking-loader {
+    height: 144px;
 }
 
 .select {

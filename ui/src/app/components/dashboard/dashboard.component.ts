@@ -19,6 +19,8 @@ export class DashboardComponent implements OnInit {
 
   balance$!: Observable<ResponseDto>;
 
+  loading: boolean = false;
+
   history!: CalculatedHistoryItem[];
   sum$!: Observable<number>;
 
@@ -64,6 +66,7 @@ export class DashboardComponent implements OnInit {
   }
 
   postBooking(action: ActionEnum) {
+    this.loading = true;
     const credentials: Credentials = this.storageService.getCredentials();
 
     this.atossSerivce
@@ -85,6 +88,8 @@ export class DashboardComponent implements OnInit {
               duration: 3000,
             }
           );
+
+          this.loading = false;
         },
         error: (e) => {
           this.snackbar.open(
@@ -96,6 +101,8 @@ export class DashboardComponent implements OnInit {
           );
 
           this.logout();
+
+          this.loading = false;
         },
       });
   }

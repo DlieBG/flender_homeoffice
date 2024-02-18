@@ -30,7 +30,7 @@
     </div>
 
     <ng-template #loader>
-        <div class="loader">
+        <div class="balance-loader">
             <mat-spinner color="accent" diameter="50"></mat-spinner>
         </div>
     </ng-template>
@@ -48,15 +48,21 @@
             </mat-form-field>
         </div>
 
-        <fle-button class="button" mode="primary" [appearance]="isActive() ? 'stroked' : 'flat'" label="Kommen"
-            leftIconName="heroArrowLeftOnRectangle" type="button"
-            (handleClick)="postBooking(ActionEnum.start)"></fle-button>
-        <br>
+        <div class="booking-buttons" [hidden]="loading">
+            <fle-button class="button" mode="primary" [appearance]="isActive() ? 'stroked' : 'flat'" label="Kommen"
+                leftIconName="heroArrowLeftOnRectangle" type="button"
+                (handleClick)="postBooking(ActionEnum.start)"></fle-button>
+            <br>
 
-        <fle-button class="button" mode="primary" [appearance]="isActive() ? 'flat' : 'stroked'" label="Gehen"
-            leftIconName="heroArrowRightOnRectangle" type="button"
-            (handleClick)="postBooking(ActionEnum.stop)"></fle-button>
-        <br>
+            <fle-button class="button" mode="primary" [appearance]="isActive() ? 'flat' : 'stroked'" label="Gehen"
+                leftIconName="heroArrowRightOnRectangle" type="button"
+                (handleClick)="postBooking(ActionEnum.stop)"></fle-button>
+            <br>
+        </div>
+
+        <div class="booking-loader" *ngIf="loading">
+            <mat-spinner color="accent" diameter="50"></mat-spinner>
+        </div>
     </div>
 
     <div class="balance-today">
