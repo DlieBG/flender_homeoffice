@@ -47,7 +47,7 @@
 
             <mat-form-field appearance="outline" color="accent">
                 <mat-label>PIN</mat-label>
-                <input matInput type="password" [(ngModel)]="credentials.pin">
+                <input matInput type="password" [(ngModel)]="credentials.pin" (keydown.enter)="save()">
                 <mat-icon matSuffix>123</mat-icon>
             </mat-form-field>
 

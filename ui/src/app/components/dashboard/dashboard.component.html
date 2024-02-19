@@ -52,12 +52,12 @@
             <fle-button class="button" mode="primary" [appearance]="isActive() ? 'stroked' : 'flat'" label="Kommen"
                 leftIconName="heroArrowLeftOnRectangle" type="button"
                 (handleClick)="postBooking(ActionEnum.start)"></fle-button>
-            <br>
+            <div class="button-br"></div>
 
             <fle-button class="button" mode="primary" [appearance]="isActive() ? 'flat' : 'stroked'" label="Gehen"
                 leftIconName="heroArrowRightOnRectangle" type="button"
                 (handleClick)="postBooking(ActionEnum.stop)"></fle-button>
-            <br>
+            <div class="button-br"></div>
         </div>
 
         <div class="booking-loader" *ngIf="loading">
@@ -87,9 +87,9 @@
                         </div>
                     </td>
                     <td class="minus">
-                        -15 Minuten Pause
+                        - 15 Minuten Pause
                         <br>
-                        -30 Minuten Pause
+                        - 30 Minuten Pause
                     </td>
                 </tr>
                 <tr>
@@ -123,7 +123,7 @@
                     </p>
 
                     <p>
-                        Nicht Geräteübergreifend!
+                        Nicht geräteübergreifend!
                     </p>
                 </div>
             </div>
