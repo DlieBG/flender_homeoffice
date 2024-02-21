@@ -1,0 +1,22 @@
+.history-item {
+    margin-top: 1.25em;
+    display: flex;
+    align-items: center;
+    margin: 2em;
+}
+
+.history-item>fle-icon {
+    margin-right: 1em;
+}
+
+.start {
+    color: forestgreen;
+}
+
+.stop {
+    color: crimson;
+}
+
+.button-br {
+    height: 1.5em;
+}

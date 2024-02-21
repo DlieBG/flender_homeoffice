@@ -9,9 +9,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 import { FleIconModule, FleButtonModule, FleNavigationModule, flenderIconSet, FleCategoryModule, FleIconButtonModule } from '@flender/ngx-ui-components';
-import { heroArrowLeftOnRectangle, heroArrowRightOnRectangle, heroArrowPath, heroCog8Tooth, heroLockClosed, heroShieldExclamation, heroClock, heroPlay, heroInformationCircle, heroPause, heroQrCode } from "@ng-icons/heroicons/outline";
+import { heroArrowLeftOnRectangle, heroArrowRightOnRectangle, heroArrowPath, heroCog8Tooth, heroLockClosed, heroShieldExclamation, heroClock, heroPlay, heroInformationCircle, heroPause, heroQrCode, heroFire, heroXMark } from "@ng-icons/heroicons/outline";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +23,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { HttpClientModule } from '@angular/common/http';
 import { TimeAmountPipe } from './pipes/time-amount.pipe';
+import { ConfirmComponent } from './components/confirm/confirm.component';
+import { QrComponent } from './components/qr/qr.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,8 @@ import { TimeAmountPipe } from './pipes/time-amount.pipe';
     LoginComponent,
     DashboardComponent,
     TimeAmountPipe,
+    ConfirmComponent,
+    QrComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +48,7 @@ import { TimeAmountPipe } from './pipes/time-amount.pipe';
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
+    MatBottomSheetModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
@@ -61,6 +67,8 @@ import { TimeAmountPipe } from './pipes/time-amount.pipe';
       heroInformationCircle,
       heroPause,
       heroQrCode,
+      heroFire,
+      heroXMark,
     }, [
       ...flenderIconSet
     ]),
