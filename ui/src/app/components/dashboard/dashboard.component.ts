@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionEnum, ResponseDto, TypeEnum } from '../../types/atoss.types';
+import { ActionEnum, BookingRequestDto, ResponseDto, TypeEnum } from '../../types/atoss.types';
 import { AtossService } from '../../services/atoss/atoss.service';
 import { Observable, catchError, combineLatest, combineLatestWith, map, of, timer } from 'rxjs';
 import { StorageService } from '../../services/storage/storage.service';
@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { Credentials, HistoryBooking } from '../../types/storage.types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CalculatedHistoryItem, CalculatedTypeEnum } from '../../types/history.types';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +34,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private snackbar: MatSnackBar,
     private router: Router,
+    private bottomsheet: MatBottomSheet,
     private storageService: StorageService,
     private atossSerivce: AtossService,
   ) { }
@@ -47,6 +50,10 @@ export class DashboardComponent implements OnInit {
   logout() {
     this.storageService.resetCredentials();
     this.router.navigate(['/', 'login']);
+  }
+
+  showQr() {
+
   }
 
   getBalance() {
@@ -67,50 +74,62 @@ export class DashboardComponent implements OnInit {
   }
 
   postBooking(action: ActionEnum) {
-    this.loading = true;
-    const credentials: Credentials = this.storageService.getCredentials();
+    this.bottomsheet
+      .open(
+        ConfirmComponent,
+        {
+          data: {
+            action: action,
+            type: this.type,
+          } as BookingRequestDto
+        }
+      )
+      .afterDismissed()
+      .subscribe(
+        (confirm) => {
+          if (confirm) {
+            this.loading = true;
+            const credentials: Credentials = this.storageService.getCredentials();
 
-    this.atossSerivce
-      .postBooking({
-        personal_number: credentials.personal_number,
-        pin: credentials.pin,
-        action: action,
-        type: this.type,
-      })
-      .subscribe({
-        next: (booking) => {
-          this.storageService.addBooking(booking);
-          this.calculateHistory();
+            this.atossSerivce
+              .postBooking({
+                personal_number: credentials.personal_number,
+                pin: credentials.pin,
+                action: action,
+                type: this.type,
+              })
+              .subscribe({
+                next: (booking) => {
+                  this.storageService.addBooking(booking);
+                  this.calculateHistory();
 
-          this.snackbar.open(
-            'Erfolgreich gebucht!',
-            '',
-            {
-              duration: 3000,
-            }
-          );
+                  this.snackbar.open(
+                    'Erfolgreich gebucht!',
+                    '',
+                    {
+                      duration: 3000,
+                    }
+                  );
 
-          this.loading = false;
-        },
-        error: (e) => {
-          this.snackbar.open(
-            'Ein Fehler ist aufgetreten! :(',
-            '',
-            {
-              duration: 3000,
-            }
-          );
+                  this.loading = false;
+                },
+                error: (e) => {
+                  this.snackbar.open(
+                    'Ein Fehler ist aufgetreten! :(',
+                    '',
+                    {
+                      duration: 3000,
+                    }
+                  );
 
-          this.logout();
+                  this.logout();
 
-          this.loading = false;
-        },
-      });
-  }
-
-  clear() {
-    localStorage.setItem('history', '[]');
-    this.calculateHistory();
+                  this.loading = false;
+                },
+              });
+          }
+        }
+      );
   }
 
   calculateHistory() {

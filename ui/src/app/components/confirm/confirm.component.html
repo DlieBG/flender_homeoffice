@@ -1,0 +1,34 @@
+<div class="body">
+    <div class="history-item">
+        <fle-icon class="start" name="heroArrowLeftOnRectangle" size="xl"
+            *ngIf="booking.action == ActionEnum.start"></fle-icon>
+
+        <fle-icon class="stop" name="heroArrowRightOnRectangle" size="xl"
+            *ngIf="booking.action == ActionEnum.stop"></fle-icon>
+
+        <div>
+            <h3 *ngIf="booking.type == TypeEnum.homeoffice">
+                Homeoffice
+            </h3>
+            <h3 *ngIf="booking.type == TypeEnum.trip">
+                Dienstreise
+            </h3>
+
+            <h3 *ngIf="booking.action == ActionEnum.start">
+                Kommen
+            </h3>
+            <h3 *ngIf="booking.action == ActionEnum.stop">
+                Gehen
+            </h3>
+        </div>
+    </div>
+
+    <div class="button-br"></div>
+    <fle-button class="button" mode="primary" appearance="flat" label="Bestätigen" leftIconName="heroFire" type="button"
+        (handleClick)="confirm()"></fle-button>
+    <div class="button-br"></div>
+
+    <fle-button class="button" mode="primary" appearance="stroked" label="Abbrechen" leftIconName="heroXMark"
+        type="button" (handleClick)="cancel()"></fle-button>
+    <div class="button-br"></div>
+</div>
