@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { HistoryBooking } from "./storage.types";
 
 export interface CalculatedHistoryItem {
+    timestamp: Date;
     type: CalculatedTypeEnum;
     ongoing: boolean;
     booking?: HistoryBooking;
@@ -10,5 +11,6 @@ export interface CalculatedHistoryItem {
 
 export enum CalculatedTypeEnum {
     booking,
-    calculation,
+    active_time,
+    break_time,
 }

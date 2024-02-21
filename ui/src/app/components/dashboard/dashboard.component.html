@@ -42,8 +42,8 @@
             <mat-form-field appearance="outline" color="accent">
                 <mat-label>Typ</mat-label>
                 <mat-select [(ngModel)]="type">
-                    <mat-option [value]="TypeEnum.homeoffice" selected>Homeoffice</mat-option>
-                    <mat-option [value]="TypeEnum.trip" selected>Dienstreise</mat-option>
+                    <mat-option [value]="TypeEnum.homeoffice" [disabled]="isTrip()">Homeoffice</mat-option>
+                    <mat-option [value]="TypeEnum.trip" [disabled]="!isActive(true)">Dienstreise</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -83,13 +83,17 @@
                 <tr>
                     <td>
                         <div class="ongoing-table">
-                            <fle-icon class="ongoing" name="heroClock" size="xl" *ngIf="isActive()"></fle-icon>
+                            <fle-icon class="ongoing" name="heroClock" size="xl" *ngIf="isActive(true)"></fle-icon>
                         </div>
                     </td>
-                    <td class="minus">
-                        - 15 Minuten Pause
+                    <td>
+                        <span class="minus">
+                            - {{ (( automatic_break$ | async ) ?? 0) * 60 }} Minuten Pause
+                        </span>
                         <br>
-                        - 30 Minuten Pause
+                        <span>
+                            min. 45 Minuten am Tag
+                        </span>
                     </td>
                 </tr>
                 <tr>
@@ -98,7 +102,7 @@
                     </td>
                     <td class="time">
                         <h2>
-                            {{(( sum$ | async) ?? 0) - .75 | timeAmount }}
+                            {{ (( sum$ | async ) ?? 0 ) - (( automatic_break$ | async ) ?? 0 ) | timeAmount }}
                         </h2>
                     </td>
                 </tr>
@@ -129,7 +133,8 @@
             </div>
 
             <ng-container *ngFor="let item of history;">
-                <div class="history-item" *ngIf="item.type == CalculatedTypeEnum.booking">
+                <div class="history-item" [class.trip]="item.booking?.booking?.type == TypeEnum.trip"
+                    *ngIf="item.type == CalculatedTypeEnum.booking">
                     <fle-icon class="start" name="heroArrowLeftOnRectangle" size="xl"
                         *ngIf="item.booking?.booking?.action == ActionEnum.start"></fle-icon>
 
@@ -150,12 +155,15 @@
                     </div>
                 </div>
 
-                <div class="spacer" *ngIf="item.booking?.booking?.action == ActionEnum.start"></div>
-
-                <div class="history-item calculation" *ngIf="item.type == CalculatedTypeEnum.calculation">
+                <div class="history-item calculation"
+                    *ngIf="item.type == CalculatedTypeEnum.active_time || item.type == CalculatedTypeEnum.break_time">
                     <fle-icon class="ongoing" name="heroClock" size="xl" *ngIf="item.ongoing"></fle-icon>
 
-                    <fle-icon class="finished" name="heroCheckBadge" size="xl" *ngIf="!item.ongoing"></fle-icon>
+                    <fle-icon class="active-time" name="heroPlay" size="xl"
+                        *ngIf="!item.ongoing && item.type == CalculatedTypeEnum.active_time"></fle-icon>
+
+                    <fle-icon class="break-time" name="heroPause" size="xl"
+                        *ngIf="!item.ongoing && item.type == CalculatedTypeEnum.break_time"></fle-icon>
 
                     <h3 *ngIf="item.amount$ | async as amount">
                         {{ amount | timeAmount }}

@@ -103,6 +103,19 @@ table {
     margin-right: 1em;
 }
 
+.history-item.trip {
+    margin-left: 2em;
+}
+
+.trip>fle-icon {
+    color: darkslategrey;
+}
+
+.calculation {
+    margin-left: 2em;
+    height: 27px;
+}
+
 .info {
     color: #227dc6;
 }
@@ -116,12 +129,15 @@ table {
 }
 
 .ongoing {
-    color: orangered;
     animation: pulse-animation 2s infinite;
 }
 
-.finished {
+.active-time {
     color: cornflowerblue;
+}
+
+.break-time {
+    color: #f9b200;
 }
 
 @keyframes pulse-animation {
@@ -130,21 +146,12 @@ table {
     }
 
     70% {
-        color: lightgrey;
+        color: grey;
     }
 
     100% {
         color: orangered;
     }
-}
-
-.spacer {
-    height: 25px;
-}
-
-.calculation {
-    margin-left: 2em;
-    height: 27px;
 }
 
 h3 {

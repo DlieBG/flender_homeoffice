@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
 
   history!: CalculatedHistoryItem[];
   sum$!: Observable<number>;
+  automatic_break$!: Observable<number>;
 
   ActionEnum = ActionEnum;
   TypeEnum = TypeEnum;
@@ -115,46 +116,78 @@ export class DashboardComponent implements OnInit {
   calculateHistory() {
     let calculated_history: CalculatedHistoryItem[] = [];
     let history: HistoryBooking[] = this.storageService.getBookingHistory();
+    let homeoffice_history = history.filter(
+      (booking) => {
+        return booking.booking.type == TypeEnum.homeoffice;
+      }
+    );
 
-    for (let i = 0; i < history.length; i++) {
-      calculated_history.push({
-        type: CalculatedTypeEnum.booking,
-        ongoing: false,
-        booking: history[i],
-      });
+    history.forEach(
+      (booking) => {
+        calculated_history.push({
+          timestamp: new Date(booking.timestamp),
+          type: CalculatedTypeEnum.booking,
+          ongoing: false,
+          booking: booking,
+        });
+      }
+    );
 
-      if (history[i].booking.action == ActionEnum.start) {
-        if (history.length > i + 1 && history[i + 1].booking.action == ActionEnum.stop) {
+    for (let i = 0; i < homeoffice_history.length; i++) {
+      if (homeoffice_history[i].booking.action == ActionEnum.start) {
+        if (homeoffice_history.length > i + 1 && homeoffice_history[i + 1].booking.action == ActionEnum.stop) {
           calculated_history.push({
-            type: CalculatedTypeEnum.calculation,
+            timestamp: new Date(homeoffice_history[i + 1].timestamp),
+            type: CalculatedTypeEnum.active_time,
             ongoing: false,
             amount$: of(
-              (new Date(history[i + 1].timestamp).getTime() - new Date(history[i].timestamp).getTime()) / 3600000
+              (new Date(homeoffice_history[i + 1].timestamp).getTime() - new Date(homeoffice_history[i].timestamp).getTime()) / 3600000
             ),
           });
         }
-        else if (history.length == i + 1) {
+        else if (homeoffice_history.length == i + 1) {
           calculated_history.push({
-            type: CalculatedTypeEnum.calculation,
+            timestamp: new Date(),
+            type: CalculatedTypeEnum.active_time,
             ongoing: true,
             amount$: timer(0, 250).pipe(
               map(
                 () => {
-                  return (new Date().getTime() - new Date(history[i].timestamp).getTime()) / 3600000 as number;
+                  return (new Date().getTime() - new Date(homeoffice_history[i].timestamp).getTime()) / 3600000 as number;
                 }
               ),
             ),
           });
         }
       }
+      else if (homeoffice_history[i].booking.action == ActionEnum.stop) {
+        if (homeoffice_history.length > i + 1 && homeoffice_history[i + 1].booking.action == ActionEnum.start) {
+          calculated_history.push({
+            timestamp: new Date(homeoffice_history[i + 1].timestamp),
+            type: CalculatedTypeEnum.break_time,
+            ongoing: false,
+            amount$: of(
+              (new Date(homeoffice_history[i + 1].timestamp).getTime() - new Date(homeoffice_history[i].timestamp).getTime()) / 3600000
+            ),
+          });
+        }
+      }
     }
 
-    this.history = calculated_history.reverse();
+    this.history = calculated_history.sort(
+      (a, b) => {
+        if (a.timestamp.getTime() == b.timestamp.getTime())
+          return a.ongoing ? 1 : 0;
+
+        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      }
+    );
+
     this.sum$ = of(0).pipe(
       combineLatestWith(
         calculated_history.filter(
           (ch) => {
-            return !!ch.amount$;
+            return ch.type == CalculatedTypeEnum.active_time;
           }
         ).map(
           (ch) => {
@@ -172,11 +205,53 @@ export class DashboardComponent implements OnInit {
         }
       )
     );
+
+    this.automatic_break$ = of(0).pipe(
+      combineLatestWith(
+        calculated_history.filter(
+          (ch) => {
+            return ch.type == CalculatedTypeEnum.break_time;
+          }
+        ).map(
+          (ch) => {
+            return ch.amount$;
+          }
+        )
+      ),
+      map(
+        (amounts: any[]) => {
+          return amounts.reduce(
+            (partial, a) => {
+              return partial + a;
+            }
+          );
+        }
+      ),
+      map(
+        (sum: number) => {
+          if (sum < .75)
+            return Math.ceil(45 - sum * 60) / 60;
+
+          return 0;
+        }
+      )
+    );
   }
 
-  isActive(): boolean {
+  isActive(filter_homeoffice: boolean = false): boolean {
     try {
-      return this.storageService.getBookingHistory().reverse()[0].booking.action == ActionEnum.start;
+      return this.storageService
+        .getBookingHistory()
+        .filter(
+          (booking) => {
+            if (filter_homeoffice)
+              return booking.booking.type == TypeEnum.homeoffice;
+
+            return true;
+          }
+        )
+        .reverse()
+      [0].booking.action == ActionEnum.start;
     } catch {
       return false;
     }
@@ -184,7 +259,7 @@ export class DashboardComponent implements OnInit {
 
   isTrip(): boolean {
     try {
-      return this.storageService.getBookingHistory().reverse()[0].booking.action == ActionEnum.start
+      return this.storageService.getBookingHistory().reverse()[0].booking.action == ActionEnum.stop
         && this.storageService.getBookingHistory().reverse()[0].booking.type == TypeEnum.trip;
     } catch {
       return false;
