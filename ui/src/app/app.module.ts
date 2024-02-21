@@ -24,6 +24,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { HttpClientModule } from '@angular/common/http';
 import { TimeAmountPipe } from './pipes/time-amount.pipe';
 import { ConfirmComponent } from './components/confirm/confirm.component';
+import { QrComponent } from './components/qr/qr.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
     DashboardComponent,
     TimeAmountPipe,
     ConfirmComponent,
+    QrComponent,
   ],
   imports: [
     BrowserModule,

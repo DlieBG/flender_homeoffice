@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CalculatedHistoryItem, CalculatedTypeEnum } from '../../types/history.types';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ConfirmComponent } from '../confirm/confirm.component';
+import { QrComponent } from '../qr/qr.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -53,7 +54,7 @@ export class DashboardComponent implements OnInit {
   }
 
   showQr() {
-
+    this.bottomsheet.open(QrComponent);
   }
 
   getBalance() {
