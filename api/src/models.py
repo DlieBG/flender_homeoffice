@@ -6,6 +6,7 @@ class Session(BaseModel):
     jsession: str
     dt: str
     selection_uuids: dict
+    cookies: dict
 
 class CommandEnum(str, Enum):
     on_change = 'onChange'

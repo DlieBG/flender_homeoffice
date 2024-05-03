@@ -40,6 +40,7 @@ def __init_session() -> Session:
                 for option in init_response.text.splitlines()
                     if option.startswith('[\'zul.sel.Option\'') and 'value' in option
         },
+        cookies=init_response.cookies.get_dict(),
     )
 
 def __call(session: Session, *arguments: CallItem) -> ResponseDto:
@@ -59,6 +60,7 @@ def __call(session: Session, *arguments: CallItem) -> ResponseDto:
                 ),
             ),
         },
+        cookies=session.cookies,
     )
 
     if 'Kombination Personalnummer / PIN-Code falsch' in call_response.text:
